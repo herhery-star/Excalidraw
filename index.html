@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#141e30">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icons/icon-192.png">
+<title>Excalidraw Tablet</title>
+<style>
+:root{color-scheme:dark}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:system-ui,-apple-system,Segoe UI,sans-serif;background:#141e30;color:#f8fafc}
+body{display:flex;flex-direction:column}
+header{height:58px;display:flex;align-items:center;gap:12px;padding:8px 14px;background:#172338;border-bottom:1px solid #2b3a52;flex:0 0 auto}
+.logo{width:40px;height:40px;border-radius:11px;background:#fff;display:grid;place-items:center}
+.logo img{width:32px;height:32px}
+.title{font-weight:700;font-size:17px}
+.sub{font-size:11px;color:#a9b7ca}
+.spacer{flex:1}
+button{border:0;border-radius:10px;padding:10px 14px;background:#263854;color:#fff;font-weight:600;cursor:pointer}
+button:active{transform:scale(.98)}
+main{position:relative;flex:1;background:#fff}
+iframe{position:absolute;inset:0;width:100%;height:100%;border:0;background:#fff}
+#fallback{display:none;position:absolute;inset:0;background:#f8fafc;color:#172338;align-items:center;justify-content:center;text-align:center;padding:30px}
+.card{max-width:520px}
+.card h2{margin:0 0 10px}
+.card p{line-height:1.5;color:#526277}
+.card button{background:#2563eb}
+@media (max-width:700px){header{height:52px}.title{font-size:14px}.sub{display:none}button{padding:8px 10px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo"><img src="./icons/icon-192.png" alt=""></div>
+  <div>
+    <div class="title">Excalidraw Tablet</div>
+    <div class="sub">Workspace visual • PWA</div>
+  </div>
+  <div class="spacer"></div>
+  <button id="openBtn">Buka Excalidraw ↗</button>
+</header>
+<main>
+  <iframe id="app" title="Excalidraw" src="https://excalidraw.com/"></iframe>
+  <div id="fallback">
+    <div class="card">
+      <h2>Excalidraw siap dibuka</h2>
+      <p>Jika Excalidraw tidak dapat ditampilkan di dalam frame, buka sebagai aplikasi penuh.</p>
+      <button id="fallbackBtn">Buka Excalidraw</button>
+    </div>
+  </div>
+</main>
+<script>
+const url = "https://excalidraw.com/";
+document.getElementById("openBtn").onclick = () => location.href = url;
+document.getElementById("fallbackBtn").onclick = () => location.href = url;
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./sw.js").catch(console.warn);
+}
+
+// If the embedded site refuses framing, browsers may leave the frame blank.
+// The launcher button remains available as a reliable fallback.
+setTimeout(() => {
+  const frame = document.getElementById("app");
+  try {
+    if (!frame.contentDocument) document.getElementById("fallback").style.display = "flex";
+  } catch(e) {}
+}, 1800);
+</script>
+</body>
+</html>
